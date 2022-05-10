@@ -48,7 +48,7 @@ def register(request):
                 request=request,
                 message="Đăng ký thành công"
             )
-            return redirect('register')
+            return redirect('login')
         else:
             messages.error(request=request, message="Đăng ký thất bại")
     else:
@@ -105,7 +105,7 @@ def login(request):
                     next_page = params["next"]
                     return redirect(next_page)
             except Exception:
-                return redirect('dashboard')
+                return redirect('home')
         else:
             messages.error(request=request, message="Đăng nhập thất bại")
     context = {
