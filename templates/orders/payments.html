@@ -15,8 +15,7 @@
                     <div class="card-body">
                         <p class="card-text mb-0">{{ order.full_name }}</p>
                         <p class="card-text mb-0">{{ order.full_address }}</p>
-                        <p class="card-text mb-0">{{ order.city }}, {{ order.state }}</p>
-                        <p class="card-text mb-0">{{ order.country }}</p>
+                        <p class="card-text mb-0">{{ order.ward }}, {{ order.district }}, {{ order.province }}</p>
                         <p class="card-text mb-0">{{ order.email }}</p>
                         <p class="card-text mb-0">{{ order.phone }}</p>
                         {% if order.order_note %}
@@ -98,10 +97,8 @@
 							</dd>
 						</dl>
 						<hr />
-						<p class="text-center mb-3">
-							<img src="{% static 'images/misc/payments.png' %}" height="26" />
-						</p>
-						<button class="btn btn-light btn-block" onclick="createOrder()">Thanh toan</button>
+						
+						<button class="btn btn-primary btn-block" onclick="createOrder()">Thanh toán</button>
 						<a href="{% url 'store' %}" class="btn btn-light btn-block">Tiếp tục mua sắm</a>
 					</div>
 					<!-- card-body.// -->
@@ -157,7 +154,6 @@
 		},
 		success: function(response) {
 			data = response.data;
-			alert('Thanh toán thành công!');
 			window.location.href = redirectUrl + '?order_number=' + data["order_number"] + '&payment_id=' + data["transID"];
 		},
 		error: function(response) {

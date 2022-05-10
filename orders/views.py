@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from carts.models import CartItem
 from .forms import OrderForm
 import datetime
-# from .models import Order, Payment, OrderProduct
 from .models import Order, OrderProduct, Payment
 from store.models import Product
 from django.core.mail import EmailMessage
@@ -119,10 +118,10 @@ def place_order(request, total=0, quantity=0,):
             data.phone = form.cleaned_data['phone']
             data.email = form.cleaned_data['email']
             data.address_line_1 = form.cleaned_data['address_line_1']
-            data.address_line_2 = form.cleaned_data['address_line_2']
-            data.country = form.cleaned_data['country']
-            data.state = form.cleaned_data['state']
-            data.city = form.cleaned_data['city']
+            
+            data.province = form.cleaned_data['province']
+            data.district = form.cleaned_data['district']
+            data.ward = form.cleaned_data['ward']
             data.order_note = form.cleaned_data['order_note']
             data.order_total = grand_total
             data.tax = tax
@@ -155,27 +154,27 @@ def place_order(request, total=0, quantity=0,):
 
 def order_complete(request):
     order_number = request.GET.get('order_number')
-    #transID = request.GET.get('payment_id')
+    transID = request.GET.get('payment_id')
 
-    #""" try: """
-    #order = Order.objects.get(order_number=order_number, is_ordered=True)
-    order = Order.objects.get(order_number=order_number)
-    ordered_products = OrderProduct.objects.filter(order_id=order.id)
+    try:
+        order = Order.objects.get(order_number=order_number, is_ordered=True)
+        order = Order.objects.get(order_number=order_number)
+        ordered_products = OrderProduct.objects.filter(order_id=order.id)
 
-    subtotal = 0
-    for i in ordered_products:
-        subtotal += i.product_price * i.quantity
+        subtotal = 0
+        for i in ordered_products:
+            subtotal += i.product_price * i.quantity
 
-    #payment = Payment.objects.get(payment_id=transID)
+        payment = Payment.objects.get(payment_id=transID)
 
-    context = {
-        'order': order,
-        #'ordered_products': ordered_products,
-        'order_number': order.order_number,
-        #'transID': payment.payment_id,
-        #'payment': payment,
-        'subtotal': subtotal,
-    }
-    return render(request, 'orders/order_complete.html', context)
-    #""" except Exception:
-    #    return redirect('home') """
+        context = {
+            'order': order,
+            'ordered_products': ordered_products,
+            'order_number': order.order_number,
+            'transID': payment.payment_id,
+            'payment': payment,
+            'subtotal': subtotal,
+        }
+        return render(request, 'orders/order_complete.html', context)
+    except Exception:
+        return redirect('home') 
