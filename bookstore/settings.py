@@ -37,7 +37,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'greatkart.urls'
+ROOT_URLCONF = 'bookstore.urls'
 
 TEMPLATES = [
     {
@@ -57,7 +57,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'greatkart.wsgi.application'
+WSGI_APPLICATION = 'bookstore.wsgi.application'
 
 AUTH_USER_MODEL = 'accounts.Account'    # Tên model thay thế cho model user mặc định
 
@@ -101,7 +101,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
-    'greatkart/static'
+    'bookstore/static'
 ]
 
 # Cầu hình media file
