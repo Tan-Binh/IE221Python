@@ -158,7 +158,6 @@ def order_complete(request):
 
     try:
         order = Order.objects.get(order_number=order_number, is_ordered=True)
-        order = Order.objects.get(order_number=order_number)
         ordered_products = OrderProduct.objects.filter(order_id=order.id)
 
         subtotal = 0
