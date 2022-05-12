@@ -84,7 +84,7 @@
 								</td>
 								<td class="text-right">
 									<a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}"
-										class="btn btn-danger" >
+										class="btn btn-danger" onclick="return confirm('Bạn chắc chắn muốn xóa?')">
 										Xóa</a>
 								</td>
 							</tr>
