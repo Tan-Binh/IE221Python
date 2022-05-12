@@ -68,7 +68,7 @@ body {
   line-height: 1.5;
   color: #343a40;
   text-align: left;
-  background-color: #fff;
+  background-color: rgb(248, 243, 237);
 }
 
 [tabindex="-1"]:focus {
@@ -161,12 +161,12 @@ sup {
 }
 
 a {
-  color: #3167eb;
+  color: #d39767;
   text-decoration: none;
   background-color: transparent;
 }
 a:hover {
-  color: #1244bd;
+  color: #b98458;
   text-decoration: underline;
 }
 
@@ -2386,16 +2386,16 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #fff;
-  background-color: #3167eb;
-  border-color: #3167eb;
+  background-color: #d39767;
+  border-color: #c5814ad8;
 }
 .btn-primary:hover {
   color: #fff;
-  background-color: #1650e0;
-  border-color: #154cd4;
+  background-color: #b98458;
+  border-color: #c5814ad8;
 }
 .btn-primary:focus, .btn-primary.focus {
-  box-shadow: 0 0 0 0.2rem rgba(80, 126, 238, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(197, 129, 74, 0.5);
 }
 .btn-primary.disabled, .btn-primary:disabled {
   color: #fff;
@@ -2404,11 +2404,11 @@ fieldset:disabled a.btn {
 }
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle {
   color: #fff;
-  background-color: #154cd4;
-  border-color: #1348c9;
+  background-color: #aa774d;
+  border-color: #c5814ad8;
 }
 .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus, .show > .btn-primary.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.2rem rgba(80, 126, 238, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(197, 129, 74, 0.5);
 }
 
 .btn-secondary {
@@ -2682,13 +2682,13 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary {
-  color: #3167eb;
-  border-color: #3167eb;
+  color: #d39767;
+  border-color: #c5814ad8;
 }
 .btn-outline-primary:hover {
   color: #fff;
-  background-color: #3167eb;
-  border-color: #3167eb;
+  background-color: #d39767;
+  border-color: #c5814ad8;
 }
 .btn-outline-primary:focus, .btn-outline-primary.focus {
   box-shadow: 0 0 0 0.2rem rgba(49, 103, 235, 0.5);
@@ -4352,6 +4352,7 @@ input[type=button].btn-block {
   background-clip: border-box;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.37rem;
+  padding-top: 1rem;
 }
 .card > hr {
   margin-right: 0;
@@ -4602,15 +4603,15 @@ input[type=button].btn-block {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #3167eb;
+  color: #d39767;
   background-color: #fff;
-  border: 1px solid #dee2e6;
+  border: 0.7px solid #c5814ad8;
 }
 .page-link:hover {
   z-index: 2;
-  color: #1244bd;
+  color: #b98458;
   text-decoration: none;
-  background-color: #e4e4e4;
+  background-color: #E0D3C4;
   border-color: #dee2e6;
 }
 .page-link:focus {
@@ -4631,8 +4632,8 @@ input[type=button].btn-block {
 .page-item.active .page-link {
   z-index: 1;
   color: #fff;
-  background-color: #3167eb;
-  border-color: #3167eb;
+  background-color: #d39767;
+  border-color: #c5814ad8;
 }
 .page-item.disabled .page-link {
   color: #545454;

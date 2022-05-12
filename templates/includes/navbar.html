@@ -20,8 +20,8 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav">
-                    <li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> bookstore@gmail.com </a></li>
-                    <li><a href="#" class="nav-link"> <i class="fa fa-phone"></i> 1900 8080 </a></li>
+                    <li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> bookclub@gmail.com </a></li>
+                    <li><a href="#" class="nav-link"> <i class="fa fa-phone"></i> 1900 8000 </a></li>
                 </ul> <!-- list-inline //  -->
             </div> <!-- navbar-collapse .// -->
         </div> <!-- container //  -->
@@ -32,7 +32,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-2 col-md-3 col-6">
                     <a href="{% url 'home' %}" class="brand-wrap">
-                        <img class="logo" src="{% static './images/logo.png' %}">
+                        {% load static %}<img class="logo" src="{% static './images/logoclub.png' %}">
                     </a> <!-- brand-wrap.// -->
                 </div>
                 <div class="col-lg col-sm col-md col-6 flex-grow-0">
