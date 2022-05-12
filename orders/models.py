@@ -31,12 +31,8 @@ class Order(models.Model):
     phone = models.CharField(max_length=15)
     email = models.EmailField(max_length=50)
     address_line_1 = models.CharField(max_length=50)
-    # address_line_2 = models.CharField(max_length=50, blank=True)
-    # country = models.CharField(max_length=50)
     province = models.CharField(max_length=50)
-    # state = models.CharField(max_length=50)
     district = models.CharField(max_length=50)
-    # city = models.CharField(max_length=50)
     ward = models.CharField(max_length=50)
     order_note = models.CharField(max_length=100, blank=True)
     order_total = models.FloatField()
@@ -48,7 +44,7 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def full_name(self):
-        return "{0} {1}".format(self.first_name, self.last_name)
+        return "{0} {1}".format(self.last_name, self.first_name)
 
     def full_address(self):
         return "{0}".format(self.address_line_1)
