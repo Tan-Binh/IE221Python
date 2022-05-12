@@ -23,15 +23,27 @@
         </header><!-- sect-heading -->
         <div class="row">
             {% for product in products %}
-            <div class="col-md-3">
-                <div class="card card-product-grid">
-                    <a href="{{ product.get_url }}" class="img-wrap"> <img src="{{ product.images.url }}"> </a>
-                    <figcaption class="info-wrap">
-                        <a href="{{ product.get_url }}" class="title">{{ product.product_name }}</a>
-                        <div class="price mt-1">{{ product.price }}đ</div> <!-- price-wrap.// -->
-                    </figcaption>
+                <div class="col-md-4">
+                    <figure class="card card-product-grid">
+                        <div class="img-wrap">
+                            <img src="{{ product.images.url }}" />
+                        </div>
+                        <figcaption class="info-wrap">
+                            <div class="fix-height">
+                                <a href="{{ product.get_url }}" class="title">{{ product.product_name }}</a>
+                                <div class="price-wrap mt-2">
+                                    <span class="price">{{ product.price }}đ</span>
+                                </div>
+                            </div>
+                            {% if product.stock > 0 %}
+                            <p>Còn <span class="b">{{product.stock}}</span> cuốn</p>
+                            {% else %}
+                            <h5 class="text-danger">Hết hàng</h5>
+                            {% endif %}
+                            <a href="{{ product.get_url }}" class="btn btn-block btn-primary">Xem chi tiết</a>
+                        </figcaption>
+                    </figure>
                 </div>
-            </div> <!-- col.// -->
             {% endfor %}
         </div> <!-- row.// -->
     </div><!-- container // -->

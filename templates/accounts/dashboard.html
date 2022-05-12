@@ -22,74 +22,121 @@
                 <!--   SIDEBAR .//END   -->
             </aside>
             <main class="col-md-9">
+                {% if not orders %}
+                    <h2 class="text-center">Lịch sử đặt hàng trống</h2>
+                    <br />
+                    <div class="text-center">
+                        <a href="{% url 'store' %}" class="btn btn-primary">Tiếp tục mua sắm</a>
+                    </div>
+                {% else %}
+                {% for order in orders %}
                 <article class="card">
                     <header class="card-header">
-                        <strong class="d-inline-block mr-3">Mã đơn hàng: 6123456789</strong>
-                        <span>Ngày đặt hàng: ngày 16 tháng 12 năm 2021</span>
+                        <strong class="d-inline-block mr-3">Mã đơn hàng: {{order.order_number}}</strong>
+                        <span>Ngày đặt hàng: {{order.updated_at}}</span>
                     </header>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-8">
                                 <h6 class="text-muted">Nơi nhận hàng</h6>
-                                <p>Người nhận: a <br>
-                                    Số điện thoại: +1234567890 Email: myname@pixsellz.com <br>
-                                    Địa chỉ: Số nhà, tên đường, thành phố, tỉnh <br>
+                                <p>Người nhận: {{order.full_name}} <br>
+                                    Số điện thoại: {{order.phone}} <br>
+                                    Email: {{order.email}} <br>
+                                    Địa chỉ: {{order.address_line_1}} <br>
                                 </p>
                             </div>
                             <div class="col-md-4">
                                 <h6 class="text-muted">Phương thức thanh toán</h6>
                                 <span class="text-success">
-                                    <i class="fab fa-lg fa-cc-visa"></i>
-                                    Visa **** 4216
+                                    Nhận tiền mặt khi nhận hàng
                                 </span>
-                                <p>Tổng giá: 300.000đ <br>
-                                    Phí vận chuyển: 40.000đ <br>
-                                    <span class="b">Total: 340.000đ </span>
-                                </p>
+                                <p><span class="b">Tổng giá: {{order.order_total}} </span></p>
                             </div>
                         </div> <!-- row.// -->
                     </div> <!-- card-body .// -->
                     <div class="table-responsive">
                         <table class="table table-hover">
+                            {% for order_product in order_products %}
+                            {% if order_product.order.order_number == order.order_number %}
                             <tr>
                                 <td width="65">
-                                    <img src="../images/items/1.jpg" class="img-xs border">
+                                    <img src="{{order_product.product.images.url}}" class="img-xs border">
                                 </td>
                                 <td>
-                                    <p class="title mb-0">Tên sản phẩm 1 </p>
-                                    <var class="price text-muted">100.000đ</var>
+                                    <p class="title mb-0">{{order_product.product.product_name}} </p>
+                                    <var class="price text-muted">{{order_product.product_price}}</var>
                                 </td>
-                                <td> Người bán <br> Nike clothing </td>
-                                <td width="250"> <a href="#" class="btn btn-outline-primary">Quá trình vận chuyển</a> <a href="#"
-                                        class="btn btn-light"> Chi tiết sản phẩm </a> </td>
+                                <td width="250"> <a href="#" class="btn btn-outline-primary">Quá trình vận chuyển</a>
+                                     <a href="{{ order_product.product.get_url }}"  class="btn btn-light"> Chi tiết sản phẩm </a> </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <img src="../images/items/2.jpg" class="img-xs border">
-                                </td>
-                                <td>
-                                    <p class="title mb-0">Tên sản phẩm 2 </p>
-                                    <var class="price text-muted">USD 15</var>
-                                </td>
-                                <td> Người bán <br> ABC shop </td>
-                                <td> <a href="#" class="btn btn-outline-primary">Quá trình vận chuyển</a> <a href="#"
-                                        class="btn btn-light"> Chi tiết sản phẩm </a> </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="../images/items/3.jpg" class="img-xs border">
-                                </td>
-                                <td>
-                                    <p class="title mb-0">Tên sản phẩm 3 </p>
-                                    <var class="price text-muted">USD 145</var>
-                                </td>
-                                <td> Người bán <br> Wallmart </td>
-                                <td> <a href="#" class="btn btn-outline-primary">Quá trình vận chuyển</a> <a href="#"
-                                        class="btn btn-light"> Chi tiết sản phẩm </a> </td>
-                            </tr>
+                            {% endif %}
+                            {% endfor %}
                         </table>
                     </div> <!-- table-responsive .end// -->
                 </article> <!-- order-group.// -->
+                {% endfor %}
+
+                {% if orders %}
+				<nav class="mt-4" aria-label="Page navigation sample">
+					<ul class="pagination">
+						{% if orders.has_previous %}
+						<li class="page-item">
+							<a class="page-link" href="{% url 'dashboard' %}?page=1">Đầu</a></li>
+						<li class="page-item">
+							<a class="page-link"
+								href="{% url 'dashboard' %}?page={{orders.previous_page_number}}">Trước</a>
+						</li>
+						{% else %}
+						<li class="page-item disabled">
+							<a class="page-link" href="#">Đầu</a>
+						</li>
+						<li class="page-item disabled">
+							<a class="page-link" href="#">Trước</a>
+						</li>
+						{% endif %}
+						{% if orders.number|add:'-2' >= 1 %}
+						<li class="page-item">
+							<a class="page-link" href="{% url 'dashboard' %}?page={{ orders.number|add:'-2' }}">&hellip;</a>
+						</li>
+						{% endif %}
+						{% for page in orders.paginator.page_range %}
+						{% if orders.number|add:'-1' <= page and page <= orders.number|add:'1' %}
+						{% if page == orders.number %}
+						<li class="page-item active">
+							<a class="page-link" href="{% url 'dashboard' %}?page={{ page }}">{{ page }}</a>
+						</li>
+						{% else %}
+						<li class="page-item">
+							<a class="page-link" href="{% url 'dashboard' %}?page={{ page }}">{{ page }}</a>
+						</li>
+						{% endif %}
+						{% endif %}
+						{% endfor %}
+						{% if orders.number|add:'2' <= orders.paginator.num_pages %}
+						<li class="page-item">
+							<a class="page-link" href="{% url 'dashboard' %}?page={{ orders.number|add:'2' }}">&hellip;</a>
+						</li>
+						{% endif %}
+						{% if orders.has_next %}
+						<li class="page-item">
+							<a class="page-link" href="{% url 'dashboard' %}?page={{orders.next_page_number}}">Kế</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link"
+								href="{% url 'dashboard' %}?page={{ orders.paginator.num_pages }}">Cuối</a>
+						</li>
+						{% else %}
+						<li class="page-item disabled">
+							<a class="page-link" href="#">Kế</a>
+						</li>
+						<li class="page-item disabled">
+							<a class="page-link" href="#">Cuối</a>
+						</li>
+						{% endif %}
+					</ul>
+				</nav>
+				{% endif %}
+				{% endif %}
             </main>
         </div> <!-- row.// -->
     </div>

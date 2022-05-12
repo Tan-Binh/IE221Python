@@ -2,13 +2,12 @@ from re import split
 from carts.models import Cart, CartItem
 from django.shortcuts import redirect, render
 from django.contrib import messages, auth
-# from django.contrib.sites.shortcuts import get_current_site
-# from django.template.loader import render_to_string
-# from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-# from django.utils.encoding import force_bytes
+from django.core.paginator import Paginator
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
+
+from orders.models import Order, OrderProduct
 
 from .forms import RegistrationForm
 from accounts.models import Account
@@ -34,16 +33,6 @@ def register(request):
             user.is_active = True
             user.save()
 
-            # current_site = get_current_site(request=request)
-            # mail_subject = 'Activate your blog account.'
-            # message = render_to_string('accounts/active_email.html', {
-            #     'user': user,
-            #     'domain': current_site.domain,
-            #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            #     'token': default_token_generator.make_token(user)
-            # })
-            # send_email = EmailMessage(mail_subject, message, to=[email])
-            # send_email.send()
             messages.success(
                 request=request,
                 message="Đăng ký thành công"
@@ -121,48 +110,25 @@ def logout(request):
     messages.success(request=request, message="Bạn đã đăng xuất")
     return redirect('login')
 
-
-# def activate(request, uidb64, token):
-#     try:
-#         uid = urlsafe_base64_decode(uidb64).decode()
-#         user = Account.objects.get(pk=uid)
-#     except Exception:
-#         user = None
-
-#     if user is not None and default_token_generator.check_token(user, token):
-#         user.is_active = True
-#         user.save()
-#         messages.success(
-#             request=request, message="Your account is activated, please login!")
-#         return render(request, 'accounts/login.html')
-#     else:
-#         messages.error(request=request, message="Activation link is invalid!")
-#         return redirect('home')
-
-
 @login_required(login_url="login")
 def dashboard(request):
-    return render(request, "accounts/dashboard.html")
+    orders = Order.objects.filter(user=request.user).order_by("-updated_at")
+    order_products = OrderProduct.objects.filter(user=request.user)
 
+    page = request.GET.get('page')
+    page = page or 1
+    paginator = Paginator(orders, 3)
+    paged_order = paginator.get_page(page)
+    order_count = orders.count()
 
-# def reset_password_validate(request, uidb64, token):
-#     try:
-#         uid = urlsafe_base64_decode(uidb64).decode()
-#         user = Account.objects.get(pk=uid)
-#     except Exception:
-#         user = None
-
-#     if user is not None and default_token_generator.check_token(user, token):
-#         request.session['uid'] = uid
-#         messages.info(request=request, message='Please reset your password')
-#         return redirect('reset_password')
-#     else:
-#         messages.error(request=request, message="This link has been expired!")
-#         return redirect('home')
-
+    context = {
+        'orders': paged_order,
+        'order_count': order_count,
+        'order_products': order_products,
+    }
+    return render(request, "accounts/dashboard.html", context=context)
 
 def forgotPassword(request):
-    # try:
     if request.method == 'POST':
         email = request.POST.get('email')
         try: 
@@ -170,32 +136,13 @@ def forgotPassword(request):
         except Exception:
             user = None
 
-        # current_site = get_current_site(request=request)
-        # mail_subject = 'Reset your password'
-        # message = render_to_string('accounts/reset_password_email.html', {
-        #     'user': user,
-        #     'domain': current_site.domain,
-        #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        #     'token': default_token_generator.make_token(user)
-        # })
-        # send_email = EmailMessage(mail_subject, message, to=[email])
-        # send_email.send()
-
-        # messages.success(request=request, message="Password reset email has been sent to your email address")
-
-        # uid = urlsafe_base64_encode(force_bytes(user.pk))
-        # uid = urlsafe_base64_decode(uid).decode()
         if user is not None:
             request.session['uid'] = user.pk
             messages.info(request=request, message='Hãy tạo mật khẩu mới')
             return redirect('reset_password')
         else:
-           # messages.error(request=request, message="This link has been expired!")
             messages.error(request=request, message="Tài khoản này không tồn tại")
 
-    # except Exception:
-    #     messages.error(request=request, message="Account does not exist!")
-    # finally:
     context = {
         'email': email if 'email' in locals() else '',
     }

@@ -14,7 +14,7 @@
 <section class="section-content padding-y">
 	<div class="container">
 		<div class="row">
-			<aside class="col-md-3">
+			<aside class="col-md-2">
 				<div class="card">
 					<article class="filter-group">
 						<header class="card-header">
@@ -37,89 +37,11 @@
 							<!-- card-body.// -->
 						</div>
 					</article>
-					<!-- filter-group  .// -->
-					{% comment %} <article class="filter-group">
-						<header class="card-header">
-							<a href="#" data-toggle="collapse" data-target="#collapse_4" aria-expanded="true" class="">
-								<i class="icon-control fa fa-chevron-down"></i>
-								<h6 class="title">Kích thước</h6>
-							</a>
-						</header>
-						<div class="filter-content collapse show" id="collapse_4">
-							<div class="card-body">
-								<label class="checkbox-btn">
-									<input type="checkbox" />
-									<span class="btn btn-light"> XS </span>
-								</label>
-
-								<label class="checkbox-btn">
-									<input type="checkbox" />
-									<span class="btn btn-light"> SM </span>
-								</label>
-
-								<label class="checkbox-btn">
-									<input type="checkbox" />
-									<span class="btn btn-light"> LG </span>
-								</label>
-
-								<label class="checkbox-btn">
-									<input type="checkbox" />
-									<span class="btn btn-light"> XXL </span>
-								</label>
-							</div>
-							<!-- card-body.// -->
-						</div>
-					</article> {% endcomment %}
-					<!-- filter-group .// -->
-
-					{% comment %} <article class="filter-group">
-						<header class="card-header">
-							<a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="">
-								<i class="icon-control fa fa-chevron-down"></i>
-								<h6 class="title">Mức giá</h6>
-							</a>
-						</header>
-						<div class="filter-content collapse show" id="collapse_3">
-							<div class="card-body">
-								<div class="form-row">
-									<div class="form-group col-md-6">
-										<label>Nhỏ nhất</label>
-										<!-- <input class="form-control" placeholder="$0" type="number"> -->
-										<select class="mr-2 form-control">
-											<option value="0">0</option>
-											<option value="50">50.000đ</option>
-											<option value="100">100.000đ</option>
-											<option value="150">150.000đ</option>
-											<option value="200">200.000đ</option>
-											<option value="500">500.000đ</option>
-											<option value="1000">1.000.000đ</option>
-										</select>
-									</div>
-									<div class="form-group text-right col-md-6">
-										<label>Lớn Nhât</label>
-										<select class="mr-2 form-control">
-											<option value="0">0</option>
-											<option value="50">50.000đ</option>
-											<option value="100">100.000đ</option>
-											<option value="150">150.000đ</option>
-											<option value="200">200.000đ</option>
-											<option value="500">500.000đ</option>
-											<option value="1000">1.000.000đ</option>
-										</select>
-									</div>
-								</div>
-								<!-- form-row.// -->
-								<button class="btn btn-block btn-primary">Lọc</button>
-							</div>
-							<!-- card-body.// -->
-						</div>
-					</article> {% endcomment %}
-					<!-- filter-group .// -->
 				</div>
 				<!-- card.// -->
 			</aside>
 			<!-- col.// -->
-			<main class="col-md-9">
+			<main class="col-md-10">
 				<header class="border-bottom mb-4 pb-3">
 					<div class="form-inline">
 						<span class="mr-md-auto">Tìm thấy <b>{{ product_count }}</b> món
@@ -142,6 +64,11 @@
 										<span class="price">{{ product.price }}đ</span>
 									</div>
 								</div>
+								{% if product.stock > 0 %}
+								<p>Còn <span class="b">{{product.stock}}</span> cuốn</p>
+								{% else %}
+								<h5 class="text-danger">Hết hàng</h5>
+								{% endif %}
 								<a href="{{ product.get_url }}" class="btn btn-block btn-primary">Xem chi tiết</a>
 							</figcaption>
 						</figure>

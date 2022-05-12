@@ -12,6 +12,7 @@ def _cart_id(request):
         cart_id = request.session.create()
     return cart_id
 
+
 def add_cart(request, product_id):
     current_user = request.user
     product = Product.objects.get(id=product_id)    # Get object product
@@ -31,7 +32,7 @@ def add_cart(request, product_id):
         if is_exists_cart_item:
             cart_items = CartItem.objects.filter(
                 product=product,
-                user=current_user
+                user=current_user,
             )
             existing_variation_list = [list(item.variations.all()) for item in cart_items]
             id = [item.id for item in cart_items]
@@ -49,7 +50,9 @@ def add_cart(request, product_id):
             cart_item = CartItem.objects.create(
                 product=product,
                 user=current_user,
-                quantity=1
+                quantity=1,
+                cart = Cart.objects.get(cart_id=_cart_id(request)
+        ),
             )
         if len(product_variations) > 0:
             cart_item.variations.clear()
