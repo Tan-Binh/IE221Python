@@ -2,11 +2,18 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 
-from store.models import Product, Variation
+from store.models import Product
 from carts.models import Cart, CartItem
 
 
 def _cart_id(request):
+    """ 
+    Hàm thực hiện LẤY ID GIỎ HÀNG.
+
+    Sử dụng session_key để phân biệt giỏ hàng này là của user nào.
+
+    Nếu chưa có session_key thì tạo mới cart_id và return cart_id.
+    """
     cart_id = request.session.session_key
     if not cart_id:
         cart_id = request.session.create()
@@ -14,41 +21,37 @@ def _cart_id(request):
 
 
 def add_cart(request, product_id):
-    current_user = request.user
-    product = Product.objects.get(id=product_id)    # Get object product
-    if current_user.is_authenticated:
-        product_variations = list()
-        if request.method == 'POST':
-            for item in request.POST:
-                key = item
-                value = request.POST.get(key)
-                try:
-                    variation = Variation.objects.get(
-                        product=product, variation_category__iexact=key, variation_value__iexact=value)
-                    product_variations.append(variation)
-                except ObjectDoesNotExist:
-                    pass
+    """ 
+    Hàm thực hiện THÊM SẢN PHẨM VÀO GIỎ HÀNG.
 
+    Lấy thông tin user hiện tại và sản phẩm được thêm.
+    Nếu có user (Đã đăng nhập):
+        Nếu sản phẩm được đã có trong giỏ:
+            Chỉ tăng số lượng.
+        Ngược lại, nếu sản phẩm chưa có trong giỏ:
+            Thêm sản phẩm đó vào giỏ hàng.
+    Nếu chưa có user (Chưa đăng nhập):
+        Dùng hàm _cart_id() để tạo giỏ hàng mới mà không cần đăng nhập.
+        Sau đó thêm sản phẩm vào giỏ hàng như lúc đã đăng nhập.
+
+    redirect: Trang giỏ hàng (cart.html).
+    """
+    # Lấy thông tin user hiện tại và sản phẩm được thêm
+    current_user = request.user
+    product = Product.objects.get(id=product_id)
+
+    # Nếu có user (Đã đăng nhập)
+    if current_user.is_authenticated:
+        # Nếu sản phẩm được thêm đã có trong giỏ thì chỉ tăng số lượng
         is_exists_cart_item = CartItem.objects.filter(
             product=product, user=current_user).exists()
         if is_exists_cart_item:
-            cart_items = CartItem.objects.filter(
+            cart_item = CartItem.objects.get(
                 product=product,
                 user=current_user,
             )
-            existing_variation_list = [
-                list(item.variations.all()) for item in cart_items]
-            id = [item.id for item in cart_items]
-            if product_variations in existing_variation_list:
-                idex = existing_variation_list.index(product_variations)
-                cart_item = CartItem.objects.get(id=id[idex])
-                cart_item.quantity += 1
-            else:
-                cart_item = CartItem.objects.create(
-                    product=product,
-                    user=current_user,
-                    quantity=1
-                )
+            cart_item.quantity += 1
+        # Ngược lại, nếu sản phẩm chưa được thêm thì thêm sản phẩm đó vào giỏ hàng
         else:
             cart_item = CartItem.objects.create(
                 product=product,
@@ -56,26 +59,14 @@ def add_cart(request, product_id):
                 quantity=1,
                 cart=Cart.objects.get(cart_id=_cart_id(request)),
             )
-        if len(product_variations) > 0:
-            cart_item.variations.clear()
-            for item in product_variations:
-                cart_item.variations.add(item)
         cart_item.save()
         return redirect('cart')
+
+    # Nếu chưa có user (Chưa đăng nhập)
+    # Dùng hàm _cart_id() để tạo giỏ hàng mới mà không cần đăng nhập
+    # Sau đó thêm giỏ hàng như các bước trên
     else:
-        product_variations = list()
-        if request.method == 'POST':
-            for item in request.POST:
-                key = item
-                value = request.POST.get(key)
-                try:
-                    variation = Variation.objects.get(
-                        product=product, variation_category__iexact=key, variation_value__iexact=value)
-                    product_variations.append(variation)
-                except ObjectDoesNotExist:
-                    pass
         try:
-            # Get cart using the _cart_id
             cart = Cart.objects.get(cart_id=_cart_id(request=request))
         except Cart.DoesNotExist:
             cart = Cart.objects.create(
@@ -86,38 +77,28 @@ def add_cart(request, product_id):
         is_exists_cart_item = CartItem.objects.filter(
             product=product, cart=cart).exists()
         if is_exists_cart_item:
-            cart_items = CartItem.objects.filter(
+            cart_item = CartItem.objects.get(
                 product=product,
-                cart=cart
+                cart=cart,
             )
-            existing_variation_list = [
-                list(item.variations.all()) for item in cart_items]
-            id = [item.id for item in cart_items]
-            if product_variations in existing_variation_list:
-                idex = existing_variation_list.index(product_variations)
-                cart_item = CartItem.objects.get(id=id[idex])
-                cart_item.quantity += 1
-            else:
-                cart_item = CartItem.objects.create(
-                    product=product,
-                    cart=cart,
-                    quantity=1
-                )
+            cart_item.quantity += 1
         else:
+            # Chưa đăng nhập nên thuộc tính user trong class CartItem để trống
             cart_item = CartItem.objects.create(
                 product=product,
                 cart=cart,
                 quantity=1
             )
-        if len(product_variations) > 0:
-            cart_item.variations.clear()
-            for item in product_variations:
-                cart_item.variations.add(item)
         cart_item.save()
         return redirect('cart')
 
 
 def remove_cart(request, product_id, cart_item_id):
+    """ 
+    Hàm thực hiện Giảm SỐ LƯỢNG SẢN PHẨM VÀO GIỎ HÀNG.
+
+    redirect: Trang giỏ hàng (cart.html).
+    """
     product = get_object_or_404(Product, id=product_id)
     try:
         if request.user.is_authenticated:
@@ -144,6 +125,11 @@ def remove_cart(request, product_id, cart_item_id):
 
 
 def remove_cart_item(request, product_id, cart_item_id):
+    """ 
+    Hàm thực hiện XÓA SẢN PHẨM VÀO GIỎ HÀNG.
+
+    redirect: Trang giỏ hàng (cart.html).
+    """
     product = get_object_or_404(Product, id=product_id)
     try:
         if request.user.is_authenticated:
@@ -166,6 +152,13 @@ def remove_cart_item(request, product_id, cart_item_id):
 
 
 def cart(request, total=0, quantity=0, cart_items=None):
+    """ 
+    Hàm hiển thị TRANG GIỎ HÀNG.
+
+    Hiển thị các sản phẩm trong giỏ, số lượng, giá, thuế.
+
+    render: Trang giỏ hàng (cart.html).
+    """
     try:
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(
@@ -180,7 +173,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
         grand_total = total + tax
     except ObjectDoesNotExist:
         pass    # Chỉ bỏ qua
-    print(request.user)
+
     context = {
         'total': total,
         'quantity': quantity,
@@ -193,8 +186,14 @@ def cart(request, total=0, quantity=0, cart_items=None):
 
 @login_required(login_url='login')
 def checkout(request, total=0, quantity=0, cart_items=None):
+    """ 
+    Hàm hiển thị TRANG THỦ TỤC THANH TOÁN.
+
+    Hiển thị thông tin các sản phẩm mà user đã đặt mua.
+
+    render: Trang thủ tục thanh toán (checkout.html).
+    """
     try:
-        # cart = Cart.objects.get(cart_id=_cart_id(request=request))
         cart_items = CartItem.objects.filter(user=request.user, is_active=True)
         for cart_item in cart_items:
             total += cart_item.product.price * cart_item.quantity

@@ -9,7 +9,6 @@ class AccountAdmin(UserAdmin):
     readonly_fields = ('last_login', 'date_joined')     # Chỉ cho phép đọc
     ordering = ('-date_joined',)     # Sắp xếp theo chiều ngược
 
-    # Bắt buộc phải khai báo
     filter_horizontal = ()
     list_filter = ()
     fieldsets = ()

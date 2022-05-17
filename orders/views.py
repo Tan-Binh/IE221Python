@@ -61,11 +61,11 @@ def payments(request):
                 order_product.save()
 
 
-                cart_item = CartItem.objects.get(id=item.id)
-                product_variation = cart_item.variations.all()
-                order_product = OrderProduct.objects.get(id=order_product.id)
-                order_product.variations.set(product_variation)
-                order_product.save()
+                # cart_item = CartItem.objects.get(id=item.id)
+                # product_variation = cart_item.variations.all()
+                # order_product = OrderProduct.objects.get(id=order_product.id)
+                # order_product.variations.set(product_variation)
+                # order_product.save()
 
                 # Reduce the quantity of the sold products
                 product = Product.objects.get(id=item.product_id)
