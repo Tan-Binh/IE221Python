@@ -1,14 +1,10 @@
-from re import split
-from carts.models import Cart, CartItem
 from django.shortcuts import redirect, render
 from django.contrib import messages, auth
 from django.core.paginator import Paginator
-from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.tokens import default_token_generator
 
 from orders.models import Order, OrderProduct
-
+from carts.models import Cart, CartItem
 from .forms import RegistrationForm
 from accounts.models import Account
 from carts.views import _cart_id
@@ -17,6 +13,14 @@ import requests
 
 
 def register(request):
+    """ 
+    Hàm hiển thị trang ĐĂNG KÝ,
+    thực hiện việc ĐĂNG KÝ của người dùng.
+
+    Lấy thông tin từ form -> tạo user mới -> lưu vào CSDL.
+
+    render: Trang đăng ký (register.html).
+    """
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -49,6 +53,22 @@ def register(request):
 
 
 def login(request):
+    """ 
+    Hàm hiển thị trang ĐĂNG NHẬP,
+    thực hiện việc ĐĂNG NHẬP của user.
+
+    Xác thực người dùng.
+    Nếu người dùng tồn tại:
+        Gán user vào thuộc tính user của từng sản phẩm trong giỏ hàng hiện tại (class cart_items).
+    Nếu người dùng tồn tại:
+        Thông báo ĐĂNG NHẬP thất bại.
+
+    render: Trang đăng nhập (login.html).
+
+    Trường hợp thanh toán khi chưa đăng nhập:
+        Sau khi nhấn nút thanh toán -> chuyển đến trang đăng nhập.
+        Đăng nhập xong thì redirect: Trang tiếp theo sau khi nhấn nút thanh toán.
+    """
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -58,29 +78,9 @@ def login(request):
                 cart = Cart.objects.get(cart_id=_cart_id(request))
                 cart_items = CartItem.objects.filter(cart=cart)
                 if cart_items.exists():
-                    product_variation = []
-                    for cart_item in cart_items:
-                        variations = cart_item.variations.all()
-                        product_variation.append(list(variations))
-                        # cart_item.user = user
-                        # cart_item.save()
-                    cart_items = CartItem.objects.filter(user=user)
-                    existing_variation_list = [list(item.variations.all()) for item in cart_items]
-                    id = [item.id for item in cart_items]
-
-                    for product in product_variation:
-                        if product in existing_variation_list:
-                            index = existing_variation_list.index(product)
-                            item_id = id[index]
-                            item = CartItem.objects.get(id=item_id)
-                            item.quantity += 1
-                            item.user = user
-                            item.save()
-                        else:
-                            cart_items = CartItem.objects.filter(cart=cart)
-                            for item in cart_items:
-                                item.user = user
-                                item.save()
+                    for item in cart_items:
+                        item.user = user
+                        item.save()
             except Exception:
                 pass
             auth.login(request=request, user=user)
@@ -106,12 +106,27 @@ def login(request):
 
 @login_required(login_url="login")
 def logout(request):
+    """ 
+    Hàm thực hiện việc ĐĂNG XUẤT của user.
+
+    Thông báo đăng xuất thành công và redirect: Trang đăng nhập (login.html)
+    """
     auth.logout(request)
     messages.success(request=request, message="Bạn đã đăng xuất")
     return redirect('login')
 
+
 @login_required(login_url="login")
 def dashboard(request):
+    """ 
+    Hàm hiển thị trang LỊCH SỬ MUA HÀNG,
+    thực hiện việc XEM LỊCH SỬ MUA HÀNG của user.
+
+    Xuất thông các đơn hàng và các sản phẩm mà user đã đặt mua.
+    Sắp xếp các đơn từ mới nhất -> cũ nhất.
+
+    render: Trang lịch sử mua hàng (dashboard.html)
+    """
     orders = Order.objects.filter(user=request.user).order_by("-updated_at")
     order_products = OrderProduct.objects.filter(user=request.user)
 
@@ -128,10 +143,23 @@ def dashboard(request):
     }
     return render(request, "accounts/dashboard.html", context=context)
 
+
 def forgotPassword(request):
+    """ 
+    Hàm hiển thị trang QUÊN MẬT KHẨU,
+    thực hiện việc NHẬP EMAIL CỦA ACCOUNT ĐÃ QUÊN MẬT KHẨU của user.
+
+    Lấy email mà user nhập để xác thực user.
+    Nếu user tồn tại:
+        Lưu id của user vào request.session['uid'].
+        redirect: Trang đặt lại mật khẩu (reset_password.html).
+    Nếu user không tồn tại:
+        Thông báo tài khoản không tồn tại
+        render: Trang quên mật khẩu (forgotPassword.html).
+    """
     if request.method == 'POST':
         email = request.POST.get('email')
-        try: 
+        try:
             user = Account.objects.get(email__exact=email)
         except Exception:
             user = None
@@ -141,7 +169,8 @@ def forgotPassword(request):
             messages.info(request=request, message='Hãy tạo mật khẩu mới')
             return redirect('reset_password')
         else:
-            messages.error(request=request, message="Tài khoản này không tồn tại")
+            messages.error(request=request,
+                           message="Tài khoản này không tồn tại")
 
     context = {
         'email': email if 'email' in locals() else '',
@@ -149,9 +178,21 @@ def forgotPassword(request):
     return render(request, "accounts/forgotPassword.html", context=context)
 
 
-
-
 def reset_password(request):
+    """ 
+    Hàm hiển thị trang ĐẶT LẠI MẬT KHẨU,
+    thực hiện việc ĐẶT LẠI MẬT KHẨU của user.
+
+    Lấy id từ request.session['uid'] đã lưu ở hàm forgotPassword -> truy xuất user cần đổi mật khẩu.
+    Lấy mật khẩu mới cập nhật vào CSDL.
+    
+    Nếu password == confirm_password:
+        Thông báo đổi mật khẩu thành công.
+        redirect: Trang đăng nhập (login.html).
+    Nếu password != confirm_password:
+        Thông báo mật khẩu không trùng khớp.
+        render: Trang đặt lại mật khẩu (reset_password.html).
+    """
     if request.method == 'POST':
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')

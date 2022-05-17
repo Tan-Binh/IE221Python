@@ -57,7 +57,7 @@ class Account(AbstractBaseUser):
     is_superadmin = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'    # Trường quyêt định khi login
-    # Các trường yêu cầu khi đk tài khoản (mặc định đã có email), mặc định có password
+    # Các trường yêu cầu khi đk tài khoản
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'password']
 
     objects = MyAccountManager()

@@ -1,10 +1,10 @@
-from orders.models import OrderProduct
 from django.contrib import messages
-from store.forms import ReviewForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.db.models import Q
 
+from orders.models import OrderProduct
+from store.forms import ReviewForm
 from store.models import Product, ReviewRating
 from carts.models import Cart, CartItem
 from category.models import Category
@@ -80,7 +80,6 @@ def submit_review(request, product_id):
             review = ReviewRating.objects.get(user__id=request.user.id, product__id=product_id)
             form = ReviewForm(request.POST, instance=review)
             form.save()
-            messages.success(request, "Thank you! Your review has been updated.")
             return redirect(url)
         except Exception:
             form = ReviewForm(request.POST)
@@ -93,5 +92,5 @@ def submit_review(request, product_id):
                 data.product_id = product_id
                 data.user_id = request.user.id
                 data.save()
-                messages.success(request, "Thank you! Your review has been submitted.")
+                messages.success(request, "Cảm ơn bạn đã đánh giá sản phẩm!")
                 return redirect(url)

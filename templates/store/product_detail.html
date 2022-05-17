@@ -85,7 +85,9 @@
                         <br>
                         {% if user.is_authenticated %}
                             {% if orderproduct %}
-                            <input type="submit" value="Submit Review" class="btn btn-primary">
+                            {% comment %} <input type="submit" value="Submit Review" class="btn btn-primary">#\ {% endcomment %}
+                            {% comment %} <input type="submit" value="Submit Review" class="btn btn-primary"> {% endcomment %}
+                            <button type="submit" value="Submit Review" class="btn btn-primary"> Gửi đánh giá </button>
                             {% else %}
                             <p>Bạn phải mua sản phầm này mới có thể đánh giá.</p>
                             {% endif %}

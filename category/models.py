@@ -3,11 +3,15 @@ from django.urls import reverse
 
 
 class Category(models.Model):
+    """
+    class thể loại
+    """
     category_name = models.CharField(max_length=50, unique=True)
+    # Trường slug là để định danh cho 1 category
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(max_length=255, blank=True)
-    # category_image = models.ImageField(upload_to='photos/categories/', blank=True)
 
+    # Nếu không có thì trong trang superadmin sẽ hiển thị categorys, điều này thì không đúng chỉnh tả.
     class Meta:
         verbose_name = 'category'
         verbose_name_plural = 'categories'
