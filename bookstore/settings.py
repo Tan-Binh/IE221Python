@@ -2,7 +2,7 @@ from pathlib import Path
 
 import os
 import django_heroku
-
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
@@ -11,7 +11,7 @@ SECRET_KEY = 'django-insecure-m+qz(hcao0anf0g+a9$=dfj*97h1t=dyge*q$2g=vl^fit#c#t
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['bookclubforbookaholics.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
