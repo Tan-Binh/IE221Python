@@ -1,1 +1,1 @@
-web: gunicorn bookstore.wsgi:apllication --log-file -
+web: gunicorn bookclubforbookaholics.wsgi --log-file -
