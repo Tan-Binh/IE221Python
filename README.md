@@ -1,4 +1,4 @@
-Vì gặp lỗi khi deloy nên mong thầy sử dụng localhost với dữ liệu là test5.sql.
+Vì gặp lỗi khi deloy nên mong thầy hãy chạy trên localhost và sử dụng mysql với dữ liệu là file test5.sql
 
 
 'NAME': 'test5',
