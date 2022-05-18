@@ -2,6 +2,7 @@ from pathlib import Path
 
 #Để project biết được mình có file media thì import thư viện os
 import os
+import django_heroku
 
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -110,3 +111,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
+
+#Activate Django-Heroku.
+django_heroku.settings(locals())
