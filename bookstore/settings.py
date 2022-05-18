@@ -12,7 +12,7 @@ SECRET_KEY = 'django-insecure-m+qz(hcao0anf0g+a9$=dfj*97h1t=dyge*q$2g=vl^fit#c#t
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['bookclubforbookaholics.herokuapp.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
