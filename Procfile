@@ -1,1 +1,1 @@
-web: gunicorn IE221Python.wsgi
+web: gunicorn IE221Python.wgsi --log-file -
