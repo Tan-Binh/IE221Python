@@ -1,1 +1,1 @@
-web: gunicorn IE221Python.wsgi:apllication --log-file -
+web: gunicorn bookstore.wsgi:apllication --log-file -
