@@ -63,14 +63,14 @@
                                         <tbody>
                                             {% for item in ordered_products %}
                                             <tr>
-                                                <td>{{ item.product.product_name }}
-                                                    {% comment %} <p class="text-muted small">
-                                                        {% if item.variations.all %}
-                                                        {% for i in item.variations.all %}
-                                                        {{ i.variation_category | capfirst }} : {{ i.variation_value | capfirst }} <br>
-                                                        {% endfor %}
-                                                        {% endif %}
-                                                    </p> {% endcomment %}
+                                                <td>
+                                                    <figure class="itemside align-items-center">
+                                                        <div class="aside"><img src="{{ item.product.images.url}}" 
+                                                            class="img-sm"></div>
+                                                        <figcaption class="info">
+                                                            {{ item.product.product_name }}
+                                                        </figcaption>
+                                                    </figure>
                                                 </td>
                                                 <td class="text-center">{{ item.quantity }}</td>
                                                 <td class="text-center">{{ item.product_price }} VND</td>

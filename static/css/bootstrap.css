@@ -3236,7 +3236,7 @@ input[type=button].btn-block {
 .dropdown-item.active, .dropdown-item:active {
   color: #fff;
   text-decoration: none;
-  background-color: #3167eb;
+  background-color: #d39767;
 }
 .dropdown-item.disabled, .dropdown-item:disabled {
   color: #545454;
@@ -5142,8 +5142,8 @@ a.badge-gray-light:focus, a.badge-gray-light.focus {
 .list-group-item.active {
   z-index: 2;
   color: #fff;
-  background-color: #3167eb;
-  border-color: #3167eb;
+  background-color: #d39767;
+  border-color: #c5814ad8;
 }
 
 .list-group-horizontal {

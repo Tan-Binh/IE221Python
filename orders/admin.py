@@ -1,6 +1,6 @@
 from pyexpat import model
 from django.contrib import admin
-from .models import Order, OrderProduct, Payment
+from .models import Order, OrderProduct
 from .models import Order, OrderProduct
 
 class OrderAdmin(admin.ModelAdmin):
@@ -8,6 +8,10 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ('order_number', 'last_name', 'first_name')
     ordering = ('order_number',)
 
+class OrderProductAdmin(admin.ModelAdmin):
+    list_display = ('order', 'product', 'quantity', 'product_price', 'ordered', 'created_at', 'updated_at')
+    search_fields = ('order', 'product')
+    ordering = ('order',)
+
 admin.site.register(Order, OrderAdmin)
-admin.site.register(Payment)
-admin.site.register(OrderProduct)
+admin.site.register(OrderProduct, OrderProductAdmin)

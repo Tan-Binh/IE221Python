@@ -22,7 +22,7 @@
                         <article class="content-body">
                             <h2 class="title">{{ single_product.product_name }}</h2>
                             <div class="mb-3">
-                                <var class="price h4">{{ single_product.price }}đ</var>
+                                <var class="price h4">{{ single_product.price }} VND</var>
                             </div>
 
                             <p>{{ single_product.description }}</p>
@@ -85,8 +85,6 @@
                         <br>
                         {% if user.is_authenticated %}
                             {% if orderproduct %}
-                            {% comment %} <input type="submit" value="Submit Review" class="btn btn-primary">#\ {% endcomment %}
-                            {% comment %} <input type="submit" value="Submit Review" class="btn btn-primary"> {% endcomment %}
                             <button type="submit" value="Submit Review" class="btn btn-primary"> Gửi đánh giá </button>
                             {% else %}
                             <p>Bạn phải mua sản phầm này mới có thể đánh giá.</p>
@@ -104,7 +102,7 @@
                 <article class="box mb-3">
                     <div class="icontext w-100">
                         <div class="text">
-                            <span class="date text-muted float-md-right">{{ review.updated_at }}</span>
+                            <span class="date text-muted float-md-right">{{review.updated_at.time}} ngày {{review.updated_at.day}} tháng {{review.updated_at.month}} năm {{review.updated_at.year}}</span>
                             <h6 class="mb-1">{{ review.user.full_name }}</h6>
                             <div class="rating-star">
                                 <span>

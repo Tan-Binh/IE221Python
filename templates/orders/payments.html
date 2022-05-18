@@ -10,7 +10,7 @@
 				Xem lại đơn đặt hàng của bạn và thanh toán
 			</h4>
 			<aside class="col-lg-8">
-				<div class="card">
+				<div class="card"
                     <h5 class="card-header">Thông tin đơn hàng</h5>
                     <div class="card-body">
                         <p class="card-text mb-0">{{ order.full_name }}</p>
@@ -38,8 +38,8 @@
                             <thead class="text-muted">
                                 <tr class="small text-uppercase">
                                     <th scope="col">Sản phẩm</th>
-                                    <th scope="col" width="120">Số lượng</th>
-                                    <th scope="col" width="120">Giá</th>
+                                    <th scope="col" width="150">Số lượng</th>
+                                    <th scope="col" width="150">Giá</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,13 +52,6 @@
                                             <figcaption class="info">
                                                 <a href="{{ cart_item.product.get_url }}" class="title text-dark">
                                                     {{ cart_item.product.product_name }}</a>
-                                                {% comment %} <p class="text-muted small">
-                                                    {% if cart_item.variations.all %}
-                                                    {% for item in cart_item.variations.all %}
-                                                    {{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst }} <br>
-                                                    {% endfor %}
-                                                    {% endif %}
-                                                </p> {% endcomment %}
                                             </figcaption>
                                         </figure>
                                     </td>
@@ -67,8 +60,8 @@
                                     </td>
                                     <td>
                                         <div class="price-wrap">
-                                            <var class="price">{{ cart_item.sub_total }}đ</var>
-                                            <small class="text-muted">{{ cart_item.product.price }}đ mỗi món </small>
+                                            <var class="price">{{ cart_item.sub_total }} VND</var>
+                                            <small class="text-muted">{{ cart_item.product.price }} VND mỗi món </small>
                                         </div> <!-- price-wrap .// -->
                                     </td>
                                 </tr>
@@ -84,21 +77,20 @@
 					<div class="card-body">
 						<dl class="dlist-align">
 							<dt>Tổng giá:</dt>
-							<dd class="text-right">{{ total }}đ</dd>
+							<dd class="text-right">{{ total }} VND</dd>
 						</dl>
 						<dl class="dlist-align">
 							<dt>Thuế:</dt>
-							<dd class="text-right">{{ tax }}đ</dd>
+							<dd class="text-right">{{ tax }} VND</dd>
 						</dl>
 						<dl class="dlist-align">
 							<dt>Tổng cộng:</dt>
 							<dd class="text-right text-dark b">
-								<strong>{{ grand_total }}đ</strong>
+								<strong>{{ grand_total }} VND</strong>
 							</dd>
 						</dl>
 						<hr />
-						
-						<button class="btn btn-primary btn-block" onclick="createOrder()">Thanh toán</button>
+						<a href="{% url 'order_complete' %}?order_number={{order.order_number}}" class="btn btn-primary btn-block">Thanh toán</a>
 						<a href="{% url 'store' %}" class="btn btn-light btn-block">Tiếp tục mua sắm</a>
 					</div>
 					<!-- card-body.// -->
@@ -113,53 +105,6 @@
 	<!-- container .//  -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
-<script>
-	function getCookie(name) {
-		let cookieValue = null;
-		if (document.cookie && document.cookie !== '') {
-			const cookies = document.cookie.split(';');
-			for (let i = 0; i < cookies.length; i++) {
-				const cookie = cookies[i].trim();
-				if (cookie.substring(0, name.length + 1) === (name + '=')) {
-					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-					break;
-				}
-			}
-		}
-		return cookieValue;
-	}
 
-	var amount = parseFloat("{{ grand_total }}");
-	var url = "{% url 'payments' %}";
-	var csrfToken = getCookie('csrftoken');
-	var orderID = "{{ order.order_number }}";
-	var paymentMethod = 'Cash';
-	var redirectUrl = "{% url 'order_complete' %}"
 
-	function uuidv4() {
-		return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-			(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-		);
-	}
-
-	const createOrder = () => $.ajax({
-		type: 'POST',
-		url: url,
-		data: {
-			'csrfmiddlewaretoken': "{{ csrf_token }}",
-			'orderID': orderID,
-			'payment_method': paymentMethod,
-			'status': "SUCCESS",
-			'transID': uuidv4()
-		},
-		success: function(response) {
-			data = response.data;
-			window.location.href = redirectUrl + '?order_number=' + data["order_number"] + '&payment_id=' + data["transID"];
-		},
-		error: function(response) {
-			error = response.error;
-			alert('Transaction completed, but 1 error occurred: ' + error);
-		}
-	});
-</script>
 {% endblock %}

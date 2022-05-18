@@ -33,7 +33,7 @@
                 <article class="card">
                     <header class="card-header">
                         <strong class="d-inline-block mr-3">Mã đơn hàng: {{order.order_number}}</strong>
-                        <span>Ngày đặt hàng: {{order.updated_at}}</span>
+                        <span>Ngày đặt hàng: {{order.updated_at.time}} ngày {{order.updated_at.day}} tháng {{order.updated_at.month}} năm {{order.updated_at.year}}</span>
                     </header>
                     <div class="card-body">
                         <div class="row">
@@ -64,7 +64,7 @@
                                 </td>
                                 <td>
                                     <p class="title mb-0">{{order_product.product.product_name}} </p>
-                                    <var class="price text-muted">{{order_product.product_price}}đ</var>
+                                    <var class="price text-muted">{{order_product.product_price}} VND</var>
                                 </td>
                                 <td width="250"> <a href="#" class="btn btn-outline-primary">Quá trình vận chuyển</a>
                                      <a href="{{ order_product.product.get_url }}"  class="btn btn-light"> Chi tiết sản phẩm </a> </td>
