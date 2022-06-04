@@ -20,7 +20,7 @@ Djangoフレームワークを利用しているウェブサイト　ー　BookC
 
 担当：バックエンドです。
 
-プログラミング言語：HTML, CSS, JavaScript, Django
+プログラミング言語：HTML, CSS, Bootstrap, JavaScript, Django
 
 データベース：SQLite 
 
