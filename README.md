@@ -8,7 +8,7 @@ File báo cáo và slide: https://drive.google.com/drive/folders/1rNaycPPJw6R3Fa
 
 Djangoフレームワークを利用しているウェブサイト　ー　BookClub　ー　本の販売
 
-Link website: https://bookclubforbookaholics.herokuapp.com/
+ウェブサイトのリンク: https://bookclubforbookaholics.herokuapp.com/
 
 チームのプロジェクト
 
